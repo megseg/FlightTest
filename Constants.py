@@ -1,5 +1,5 @@
 # Citation 550 - Linear simulation
-from math import import *
+from math import *
 # xcg = 0.25 * c
 
 # Stationary flight condition

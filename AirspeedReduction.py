@@ -23,7 +23,7 @@ def EquivalentAirspeed(Vc,Tm):
     rho=p/(R*T)
 
     Ve=Vt*np.sqrt(rho/rhoISA) #The equivalent airspeed
-    return Vt,Ve
+    return Vt,Ve,rho
 
 def ReducedEquivalent(Ve,Ws,W):
     Ver=Ve*np.sqrt(Ws/W)
