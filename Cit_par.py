@@ -49,7 +49,7 @@ g      = 9.81            # [m/sec^2] (gravity constant)
 # air density [kg/m^3]  
 rho    = rho0 * np.power( ((1+(labda * hp0 / Temp0))), (-((g / (labda*R)) + 1)))
 W      = m * g            # [N]       (aircraft weight)
-
+Ws=60500 # [N]
 # Constant values concerning aircraft inertia
 
 muc    = m / (rho * S * c)
