@@ -1,4 +1,5 @@
 import numpy as np
+import Xcg as ding
 
 # Citation 550 - Linear simulation
 
@@ -6,7 +7,7 @@ import numpy as np
 
 # Stationary flight condition
 
-hp0    = 23000*0.3048      	      # pressure altitude in the stationary flight condition [m]
+hp0    = 1      	      # pressure altitude in the stationary flight condition [m]
 V0     = 221*0.514444            # true airspeed in the stationary flight condition [m/sec]
 alpha0 = 1.8/180*np.pi            # angle of attack in the stationary flight condition [rad]
 th0    = 1/180*np.pi            # pitch angle in the stationary flight condition [rad]
@@ -18,10 +19,6 @@ m      = (9165+2567-658)*0.453592            # mass [kg]
 CD0    = 0.04            # Zero lift drag coefficient [ ] from cl-cd curve
 CLa    = 5.084            # Slope of CL-alpha curve [ ] from cl-cd curve
 e      = 0.8            # Oswald factor [ ]
-
-# Longitudinal stability
-Cma    = 1            # longitudinal stabilty [ ]
-Cmde   = 1            # elevator effectiveness [ ]
 
 # Aircraft geometry
 
@@ -49,7 +46,7 @@ g      = 9.81            # [m/sec^2] (gravity constant)
 # air density [kg/m^3]  
 rho    = rho0 * np.power( ((1+(labda * hp0 / Temp0))), (-((g / (labda*R)) + 1)))
 W      = m * g            # [N]       (aircraft weight)
-Ws=60500 # [N]
+
 # Constant values concerning aircraft inertia
 
 muc    = m / (rho * S * c)
@@ -65,6 +62,10 @@ Cmac   = 0                      # Moment coefficient about the aerodynamic centr
 CNwa   = CLa                    # Wing normal force slope [ ]
 CNha   = 2 * np.pi * Ah / (Ah + 2) # Stabiliser normal force slope [ ]
 depsda = 4 / (A + 2)            # Downwash gradient [ ]
+
+# Longitudinal stability
+Cma    = CNwa * (ding.cgloc(1) - 261.56*0.0254-0.25*c)/c - CNha*(1-depsda)*Vh_V**2*Sh*lh/S/c            # longitudinal stabilty [ ]
+Cmde   = 1            # elevator effectiveness [ ]
 
 # Lift and drag coefficient
 
