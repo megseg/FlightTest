@@ -3,5 +3,5 @@ import F
 import matplotlib.pyplot as plt
 import P
 from isaConstants import *
-
-F.ReducedElevator(eIAS,Tm,P.Ws,P.W,eThrust,ede,P.CmTc,P.Cmde,P.S,P.CD)
+from Cit_par import *
+F.ReducedElevatorDeflection(eIAS,Tm,Ws,W,eThrust,ede,P.CmTc,Cmde,S,CD)

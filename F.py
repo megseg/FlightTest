@@ -3,7 +3,8 @@ from isaConstants import *
 import numpy as np
 from D import *
 import matplotlib.pyplot as plt
-
+from Cit_par import *
+import P
 def EquivalentAirspeed(Vc,Tm):
     p=pISA*(1+Lambda*hp/TISA)**(-g0/(Lambda*R))
 
@@ -21,29 +22,37 @@ def EquivalentAirspeed(Vc,Tm):
     rho=p/(R*T)
 
     Ve=Vt*np.sqrt(rho/rhoISA) #The equivalent airspeed
-    return Vt,Ve,rho
+    return Vt,Ve,rho,M
 
 
 def ReducedEquivalent(Ve,Ws,W):
     Ver=Ve*np.sqrt(Ws/W)
     return Ver
 
+
+def ThrustCoefficient(ethrust,eIAS,Tm):
+    rho=EquivalentAirspeed(eIAS,Tm)[2]
+    Vt=EquivalentAirspeed(eIAS,Tm)[0]
+    tc=ethrust/(1/2*rho*Vt**2*S)
+    return tc
+
+
 def ReducedElevatorDeflection(eIAS,Tm,Ws,W,eThrust,ede,CmTc,Cmde,S,CD):
     eVt=EquivalentAirspeed(eIAS,Tm)[0]
-    eVe=EquivalentAirspeed(eIAS,Tm)[1]
+    eVe=EquivalentAirspeed(eIAS,Tm)[1] 
     erho=EquivalentAirspeed(eIAS,Tm)[2]
     eVer=np.sort(ReducedEquivalent(eVe,Ws,W))
 
-    Tc=eThrust/(1/2*erho*eVt**2*S)
-    Tcs=rhoISA*eVer**2*CD/(erho*eVt**2)
-   
-    eqde=np.sort(ede-CmTc/Cmde*(Tcs-Tc))
+    Tc=ThrustCoefficient(eThrust,eIAS,Tm) #eThrust/(1/2*erho*eVt**2*S)
+    #Tcs=StandardThrustCoefficient(eThrust,eIAS,Tm) #rhoISA*eVer**2*CD/(erho*eVt**2)
+    eqde=np.sort(ede-CmTc/Cmde*(P.Tcs-Tc))
     plt.gca().invert_yaxis() 
     plt.plot(eVer,eqde)
     plt.title("Reduced elevator angle in function of the reduced equivalent airspeed",fontsize=15)
     plt.xlabel("Reduced equivalent airspeed [m/s]",fontsize=15)
     plt.ylabel("Reduced elevator angle [deg]",fontsize=15)
     plt.show()
+
 
 
 
