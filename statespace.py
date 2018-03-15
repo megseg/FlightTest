@@ -1,6 +1,9 @@
 import numpy as np
-import control
+import control.matlab as mat
 from Cit_par import *
+import matplotlib.pyplot as plt
+import scipy.signal as sg
+import control
 
 
 #-------------------------------------- values for symmetric matrices------------------------------------
@@ -39,6 +42,11 @@ B_sym = np.matrix([[xdele , xdelt],
                    [0 , 0],
                    [mdele , mdelt]])
 
+B2_sym = np.matrix([[xdele ],
+                   [zdele ],
+                   [0 ],
+                   [mdele ]])
+
 C_sym = np.matrix([[1. , 0 , 0 , 0],
                    [0 , 1. , 0 , 0],
                    [0 , 0 , 1. , 0],
@@ -46,7 +54,39 @@ C_sym = np.matrix([[1. , 0 , 0 , 0],
 
 D_sym = np.zeros([4,2])
 
-symsys = control.ss(A_sym,B_sym,C_sym,D_sym)
+symsys = mat.ss(A_sym,B_sym,C_sym,D_sym)
+
+
+
+H = mat.tf(symsys)
+
+t = np.arange(0,100.01,0.01)
+
+y, t = control.forced_response(symsys,t)
+#y, t = mat.impulse(H,t)
+
+plt.plot(t,y)
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #---------------------------------values for asymmetric matrices------------------------------------------------
@@ -93,5 +133,5 @@ C_asym = np.matrix([[1. , 0 , 0 , 0],
 
 D_asym = np.zeros([4,2])
 
-asymsys = control.ss(A_asym,B_asym,C_asym,D_asym)
+asymsys = mat.ss(A_asym,B_asym,C_asym,D_asym)
 
