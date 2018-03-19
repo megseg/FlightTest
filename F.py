@@ -4,9 +4,17 @@ import numpy as np
 from D import *
 import matplotlib.pyplot as plt
 from Cit_par import *
-import P
 import scipy as sc
 import Xcg
+from scipy import interpolate
+
+# Define function that returns weight in function of time
+def Weight(TOW,time):
+    Burnt=interpolate.interp1d(ET,Fused)
+    W = TOW - Burnt(time)
+    return W
+    
+
 
 # Outputs Vt, Ve, rho and M (in that order). Takes in values in SI units with Vc being the calibrated airspee, Tm being the total measured temperature and hp being the pressure height
 def EquivalentAirspeed(Vc,Tm,hp):
@@ -58,15 +66,17 @@ def ElevatorEffectiveness():
     AverageHeight=np.mean(dehp)
     Vt=EquivalentAirspeed(AverageSpeed,AverageTemperature,AverageHeight)[0]
     rho=EquivalentAirspeed(AverageSpeed,AverageTemperature,AverageHeight)[2] 
-    CN=P.W/(1/2*rho*Vt**2*S) 
+    W=np.mean(Weight(TOW,deET)) 
+    CN=W/(1/2*rho*Vt**2*S) 
     Cmde=-1/(dede)*CN*Xcg.Xcgdiff/c
     return Cmde
 
 # Calculates and plots the reduced elevator deflection curve
-def ReducedElevatorDeflection(eIAS,Tm,Ws,W,eThrust,eSthrust,ede,Cmde,CmTc,S,CD,ehp):
+def ReducedElevatorDeflection(eIAS,Tm,Ws,eThrust,eSthrust,ede,Cmde,CmTc,S,ehp,eET):
     eVt=EquivalentAirspeed(eIAS,Tm,ehp)[0]
     eVe=EquivalentAirspeed(eIAS,Tm,ehp)[1] 
     erho=EquivalentAirspeed(eIAS,Tm,ehp)[2]
+    W=Weight(TOW,eET)
     eVer=np.sort(ReducedEquivalent(eVe,Ws,W))
 
     Tc=ThrustCoefficient(eThrust,eIAS,Tm,ehp) 
@@ -89,10 +99,16 @@ def LongitudinalStability(ede,ea,Cmde):
 # Calculates and plots the ReducedElevatorControlForce
 def ReducedElevatorControlForce(eFe,Vc,Tm,hp):
     Ve=EquivalentAirspeed(Vc,Tm,hp)[1]
-    Ver=ReducedEquivalent(Ve,P.Ws,P.W)
+    Ver=ReducedEquivalent(Ve,Ws,Weight(TOW,eET))
     Fer=eFe*Ver**2/Ve**2
-    plt.plot(Ver,Fer)
+    VerFer=np.asarray(np.column_stack((Ver,Fer)))
+    VerFerSorted=VerFer[VerFer[:,0].argsort()]
+    plt.gca().invert_yaxis() 
+    plt.title("Reduced elevator control force curve",fontsize=15) 
+    plt.xlabel("Reduced equivalent airspeed [m/s]",fontsize=15)
+    plt.ylabel("Reduced control force [N]",fontsize=15)
+    plt.plot(VerFerSorted[:,0],VerFerSorted[:,1])
     plt.show()
-    print(Ver,Fer)
+
 
 
