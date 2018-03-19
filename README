@@ -1,0 +1,19 @@
+This README file explains the overall setup of the project program. 
+
+In the project multiple files can be found, these files are:
+
+PFD.csv
+This file contains the data
+
+D.py
+This file imports the data and does calibration and conversion to standard SI units.
+
+F.py
+This file contains fuctions that will be used to calculate certain variables.
+
+P.py
+This file contains placeholder values, the end goal is that nothing is imported from this file.
+
+main.py
+This file imports D.py, F.py and P.py. After importing these files it will call the functions to calculate end results.
+
