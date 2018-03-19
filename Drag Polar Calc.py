@@ -9,6 +9,7 @@ from Cit_par import *
 import matplotlib.pyplot as plt
 import numpy as np
 from isaConstants import *
+from math import *
 
 ## Defining constants ##
 
@@ -20,6 +21,8 @@ W=60000
 b = 1.458*10**(-6)                      
 A = 110.4                               ## K
 c = 2.0569                              ## m
+b      = 15.911	          # wing span [m]
+a      = b ** 2 / S      # wing aspect ratio [ ]
 
 font = {'family': 'serif',
         'color':  'darkred',
@@ -138,6 +141,17 @@ def DragCoefficient(cThrust,cVe,crho):          #input: Thrust, EAS and rho
     
 #print DragCoefficient(cThrust,cVe,crho)
 
+## make a fit for the C_D_0 calculation ##
+C_D_0 = np.polyfit(DragCoefficient(cThrust,cVe,crho), C_L(cVe, crho, S)**2, 1)
+#print C_D_0
+p = np.poly1d(C_D_0)
+C_D_0_correct = -C_D_0[1]/C_D_0[0]
+#print C_D_0_correct
+
+## Oswald efficiency factor ##
+e = C_L(cVe, crho, S)**2/(DragCoefficient(cThrust,cVe,crho))/(pi*a)
+#print e
+
 ## Plot all the graphs ##
 #CL-alpha graph
 plt.plot(ca, C_L(cVe, crho, S))
@@ -168,6 +182,7 @@ plt.show()
 
 #CL**2-CD graph
 plt.plot(DragCoefficient(cThrust,cVe,crho), C_L(cVe, crho, S)**2)
+plt.plot(DragCoefficient(cThrust,cVe,crho), p(DragCoefficient(cThrust,cVe,crho)))
 plt.title('$C_L^2-C_D$ curve, clean configuration')
 plt.ylabel('Lift coefficient squared')
 plt.xlabel('Drag coefficient')
