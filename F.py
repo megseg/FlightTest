@@ -7,6 +7,7 @@ from Cit_par import *
 import scipy as sc
 import Xcg
 from scipy import interpolate
+S1=110.4
 
 # Define function that returns weight in function of time
 def Weight(TOW,time):
@@ -14,9 +15,17 @@ def Weight(TOW,time):
     W = TOW - Burnt(time)
     return W
     
+def C_L(time, Vt, rho, S):              ## Returns CL for differennt speeds and altitudes
+    C = Weight(TOW,ctime)/(0.5*rho*Vt**2*S)
+    return C
+
+def Reynolds(rho, Vt, T):
+    mu = 1.458*10**(-6)*T**(3/2)/(T+S1)
+    Re = Vt*c*rho/mu
+    return Re
 
 
-# Outputs Vt, Ve, rho and M (in that order). Takes in values in SI units with Vc being the calibrated airspee, Tm being the total measured temperature and hp being the pressure height
+# Outputs Vt, Ve, rho and M (in that order). Takes in values in SI units with Vc being the calibrated airspeed, Tm being the total measured temperature and hp being the pressure height
 def EquivalentAirspeed(Vc,Tm,hp):
     p=pISA*(1+Lambda*hp/TISA)**(-g0/(Lambda*R))
 
@@ -34,7 +43,7 @@ def EquivalentAirspeed(Vc,Tm,hp):
     rho=p/(R*T)
 
     Ve=Vt*np.sqrt(rho/rhoISA) #The equivalent airspeed
-    return Vt,Ve,rho,M
+    return Vt,Ve,rho,M,T
 
 
 # Reduces the equivalent airspeed by using weight and standard weight ratio
