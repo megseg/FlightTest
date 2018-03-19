@@ -25,5 +25,5 @@ def cgloc(state):
 #---------------------------------------longitudinal stability ----------------------
 
 Xcg1 = cgloc(1)
-#Cmaa = CNwa * (Xcg - 261.56*0.0254-0.25*c)/c - CNha*(1-depsda)*Vh_V**2*Sh*lh/S/c
-
+Xcg2 = cgloc(2)
+Xcgdiff=Xcg1-Xcg2
