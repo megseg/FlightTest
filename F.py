@@ -15,8 +15,13 @@ def Weight(TOW,time):
     W = TOW - Burnt(time)
     return W
     
-def C_L(time, Vt, rho, S):              ## Returns CL for differennt speeds and altitudes
-    C = Weight(TOW,ctime)/(0.5*rho*Vt**2*S)
+def C_L(time, Vt, rho):              ## Returns CL for differennt speeds and altitudes
+    C = Weight(TOW,time)/(0.5*rho*Vt**2*S)
+    return C
+
+def C_D(cThrust,Vt,rho):          #input: Thrust, EAS and rho
+                                                #output: drag coefficient
+    C = cThrust/(0.5*rho*Vt**2*S)
     return C
 
 def Reynolds(rho, Vt, T):
@@ -56,7 +61,7 @@ def ReducedEquivalent(Ve,Ws,W):
 def ThrustCoefficient(ethrust,eIAS,Tm,ehp):
     rho=EquivalentAirspeed(eIAS,Tm,ehp)[2]
     Vt=EquivalentAirspeed(eIAS,Tm,ehp)[0]
-    tc=ethrust/(1/2*rho*Vt**2*S)
+    tc=ethrust/(0.5*rho*Vt**2*S)
     return tc
 
 
@@ -64,7 +69,7 @@ def ThrustCoefficient(ethrust,eIAS,Tm,ehp):
 def StandardThrustCoefficient(eSthrust,eIAS,Tm,ehp):
     rho=EquivalentAirspeed(eIAS,Tm,ehp)[2]
     Vt=EquivalentAirspeed(eIAS,Tm,ehp)[0]
-    tcs=eSthrust/(1/2*rho*Vt**2*S)
+    tcs=eSthrust/(0.5*rho*Vt**2*S)
     return tcs
 
 
@@ -76,7 +81,7 @@ def ElevatorEffectiveness():
     Vt=EquivalentAirspeed(AverageSpeed,AverageTemperature,AverageHeight)[0]
     rho=EquivalentAirspeed(AverageSpeed,AverageTemperature,AverageHeight)[2] 
     W=np.mean(Weight(TOW,deET)) 
-    CN=W/(1/2*rho*Vt**2*S) 
+    CN=W/(0.5*rho*Vt**2*S) 
     Cmde=-1/(dede)*CN*Xcg.Xcgdiff/c
     return Cmde
 
@@ -120,4 +125,13 @@ def ReducedElevatorControlForce(eFe,Vc,Tm,hp):
     plt.show()
 
 
-
+hp=np.hstack((chp,ehp,ehp))
+IAS=np.hstack((cIAS,eIAS,eIAS))
+TAT=np.hstack((cTAT,eTAT,eTAT))
+SFF=np.ones(7)*0.048
+FFL=np.hstack((cFFL,eFFL,SFF))
+FFR=np.hstack((cFFR,eFFR,SFF))
+M=EquivalentAirspeed(IAS,TAT,hp)[3]
+DTISA=TAT-(TISA+Lambda*hp)
+Thrust=np.asarray(np.column_stack((hp,M,FFL,FFR,DTISA)))
+np.savetxt('matlab.csv',Thrust,delimiter=',')
