@@ -38,8 +38,8 @@ deFused=f[:,11][74:76]*0.453592 #Fuel used
 
 # Importing thrusts from thrust.dat
 cThrust=thrust[:,0][0:6]+thrust[:,1][0:6]
-eThrust=thrust[:,0][8:15]+thrust[:,1][8:15]
-eSthrust=thrust[:,0][16:23]+ thrust[:,1][16:23]
+eThrust=thrust[:,0][6:13]+thrust[:,1][6:13]
+eSthrust=thrust[:,0][13:20]+thrust[:,1][13:20]
 
 ET=np.hstack(([0.0],cET,eET,deET))
 Fused=np.hstack(([0.0],cFused,eFused,deFused))

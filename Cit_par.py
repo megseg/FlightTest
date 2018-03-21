@@ -13,7 +13,7 @@ alpha0 = 1.8/180*np.pi            # angle of attack in the stationary flight con
 th0    = 1/180*np.pi            # pitch angle in the stationary flight condition [rad]
 
 # Aircraft mass
-m      = (9165+2567-658)*0.453592            # mass [kg]
+m      = (9165+2567+822-658)*0.453592            # mass [kg]
 
 # aerodynamic properties
 CD0    = 0.04            # Zero lift drag coefficient [ ] from cl-cd curve
@@ -114,6 +114,6 @@ Cndr   =  -0.0939
 
 
 # Values we define ourself;
-TOW = m*g   #[N]
+TOW = (9165+2567+822)*0.453592*g            # mass [kg]
 Ws  = 60500 #[N]
 CmTc = -0.0064

@@ -4,28 +4,26 @@ import numpy as np
 from D import *
 import matplotlib.pyplot as plt
 from Cit_par import *
-import scipy as sc
 import Xcg
 from scipy import interpolate
-S1=110.4
 
 # Define function that returns weight in function of time
 def Weight(TOW,time):
     Burnt=interpolate.interp1d(ET,Fused)
-    W = TOW - Burnt(time)
+    W = TOW - Burnt(time)*g
     return W
     
 def C_L(time, Vt, rho):              ## Returns CL for differennt speeds and altitudes
     C = Weight(TOW,time)/(0.5*rho*Vt**2*S)
     return C
 
-def C_D(cThrust,Vt,rho):          #input: Thrust, EAS and rho
-                                                #output: drag coefficient
+def C_D(cThrust,Vt,rho):          #input: Thrust, Vt and rho
+                                  #output: drag coefficient
     C = cThrust/(0.5*rho*Vt**2*S)
     return C
 
 def Reynolds(rho, Vt, T):
-    mu = 1.458*10**(-6)*T**(3/2)/(T+S1)
+    mu = 1.458*10**(-6)*T**(3/2)/(T+110.4)
     Re = Vt*c*rho/mu
     return Re
 
@@ -128,10 +126,10 @@ def ReducedElevatorControlForce(eFe,Vc,Tm,hp):
 hp=np.hstack((chp,ehp,ehp))
 IAS=np.hstack((cIAS,eIAS,eIAS))
 TAT=np.hstack((cTAT,eTAT,eTAT))
-SFF=np.ones(7)*0.048
+SFF=np.ones(7)*0.048000
 FFL=np.hstack((cFFL,eFFL,SFF))
 FFR=np.hstack((cFFR,eFFR,SFF))
 M=EquivalentAirspeed(IAS,TAT,hp)[3]
 DTISA=TAT-(TISA+Lambda*hp)
-Thrust=np.asarray(np.column_stack((hp,M,FFL,FFR,DTISA)))
-np.savetxt('matlab.csv',Thrust,delimiter=',')
+Thrust=np.asarray(np.column_stack((hp,M,DTISA,FFL,FFR)))
+np.savetxt('matlab.dat',Thrust,delimiter=' ')

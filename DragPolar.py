@@ -126,7 +126,7 @@ def DragCoefficient(cThrust,cVe,crho):          #input: Thrust, EAS and rho
 print(len(DragCoefficient(cThrust,cVe,crho)))
 print(len(C_L(cVe,crho,S)))
 ## make a fit for the C_D_0 calculation ##
-C_D_0 = np.polyfit(DragCoefficient(cThrust,cVe,crho), C_L(cVe, crho, S)**2, 1)
+C_D_0 = np.polyfit(C_D(cThrust,cVt,crho), C_L(cVt, crho, S)**2, 1)
 #print C_D_0
 p = np.poly1d(C_D_0)
 C_D_0_correct = -C_D_0[1]/C_D_0[0]
